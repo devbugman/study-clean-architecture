@@ -11,4 +11,6 @@ public interface MemberPort {
     void update(Long id, Member member);
 
     Member readOne(Long id);
+
+    Member findByNickname(String nickname);
 }

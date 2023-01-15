@@ -14,7 +14,7 @@ public class MemberPersistenceAdapter implements MemberPort, ExitstNicknamePort 
 
     @Override
     public Long save(final Member member) {
-        final MemberJpaEntity saveMember = jpaMemberRepository.save(
+        final var saveMember = jpaMemberRepository.save(
                 MemberJpaEntity.newMember(member.nickname(), member.password())
         );
         return saveMember.getId();
@@ -37,5 +37,18 @@ public class MemberPersistenceAdapter implements MemberPort, ExitstNicknamePort 
     @Override
     public Member readOne(final Long id) {
         return null;
+    }
+
+    @Override
+    public Member findByNickname(final String nickname) {
+        // TODO Exception
+        final var findMember = jpaMemberRepository.findByNickname(nickname).orElseThrow();
+        return new Member(
+                findMember.getId(),
+                findMember.getNickname(),
+                findMember.getPassword(),
+                findMember.getRole().name(),
+                findMember.getStatus().name()
+        );
     }
 }
