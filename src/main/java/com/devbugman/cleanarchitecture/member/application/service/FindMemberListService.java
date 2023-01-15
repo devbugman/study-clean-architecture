@@ -1,6 +1,7 @@
 package com.devbugman.cleanarchitecture.member.application.service;
 
 import com.devbugman.cleanarchitecture.member.application.port.in.FindMembersUseCase;
+import com.devbugman.cleanarchitecture.member.application.port.out.MemberPort;
 import com.devbugman.cleanarchitecture.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FindMemberListService implements FindMembersUseCase {
+    private final MemberPort memberPort;
     @Override
     public List<Member> findMembers() {
-        return null;
+        return memberPort.read();
     }
 }
