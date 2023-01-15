@@ -1,5 +1,6 @@
 package com.devbugman.cleanarchitecture.member.adapter.out.persistence;
 
+import com.devbugman.cleanarchitecture.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "member")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberJpaEntity {
+public class MemberJpaEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +27,18 @@ public class MemberJpaEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public MemberJpaEntity(final Long id, final String nickname, final String password, final Role role, final Status status) {
+        this.id = id;
+        this.nickname = nickname;
+        this.password = password;
+        this.role = role;
+        this.status = status;
+    }
+
+    public static MemberJpaEntity newMember(final String nickname, final String password) {
+        return new MemberJpaEntity(null, nickname, password, Role.MEMBER, Status.ACTIVATED);
+    }
 
     @Getter
     @RequiredArgsConstructor

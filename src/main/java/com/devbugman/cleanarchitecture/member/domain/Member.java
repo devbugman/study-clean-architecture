@@ -10,4 +10,7 @@ public record Member(
         String role,
         String status
 ) {
+    public static Member newMember(final String nickname, final String password) {
+        return new Member(null, nickname, password, null, null);
+    }
 }
