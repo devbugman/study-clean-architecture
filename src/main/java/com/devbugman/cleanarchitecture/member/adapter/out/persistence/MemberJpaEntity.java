@@ -40,6 +40,10 @@ public class MemberJpaEntity extends BaseTimeEntity {
         return new MemberJpaEntity(null, nickname, password, Role.MEMBER, Status.ACTIVATED);
     }
 
+    public void delete() {
+        this.status = Status.DEACTIVATED;
+    }
+
     @Getter
     @RequiredArgsConstructor
     enum Role {

@@ -6,6 +6,8 @@ import com.devbugman.cleanarchitecture.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class MemberPersistenceAdapter implements MemberPort, ExitstNicknamePort {
@@ -27,6 +29,9 @@ public class MemberPersistenceAdapter implements MemberPort, ExitstNicknamePort 
 
     @Override
     public void delete(final Long id) {
+        jpaMemberRepository.findById(id)
+                .orElseThrow()
+                .delete();
     }
 
     @Override
@@ -35,20 +40,42 @@ public class MemberPersistenceAdapter implements MemberPort, ExitstNicknamePort 
     }
 
     @Override
+    public List<Member> read() {
+        return jpaMemberRepository.findAll().stream()
+                .map(it -> new Member(
+                        it.getId(),
+                        it.getNickname(),
+                        it.getPassword(),
+                        it.getRole().name(),
+                        it.getStatus().name())
+                )
+                .toList();
+    }
+
+    @Override
     public Member readOne(final Long id) {
-        return null;
+        // TODO Exception
+        return jpaMemberRepository.findById(id)
+                .map(it -> new Member(
+                        it.getId(),
+                        it.getNickname(),
+                        it.getPassword(),
+                        it.getRole().name(),
+                        it.getStatus().name()
+                ))
+                .orElseThrow();
     }
 
     @Override
     public Member findByNickname(final String nickname) {
         // TODO Exception
-        final var findMember = jpaMemberRepository.findByNickname(nickname).orElseThrow();
-        return new Member(
-                findMember.getId(),
-                findMember.getNickname(),
-                findMember.getPassword(),
-                findMember.getRole().name(),
-                findMember.getStatus().name()
-        );
+        return jpaMemberRepository.findByNickname(nickname)
+                .map(it -> new Member(
+                        it.getId(),
+                        it.getNickname(),
+                        it.getPassword(),
+                        it.getRole().name(),
+                        it.getStatus().name()
+                )).orElseThrow();
     }
 }
